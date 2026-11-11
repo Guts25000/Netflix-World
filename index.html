@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Netflix World – Le parc des séries</title>
+<meta name="description" content="Netflix World, le parc d'attractions des séries : Stranger Things, The Witcher, Squid Game, Lupin, Outer Banks, One Piece et La Chronique des Bridgerton. Plan interactif, billets, Hôtel Netflix.">
+<meta name="theme-color" content="#000000">
+<link rel="icon" href="img/logo-n.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"AmusementPark","name":"Netflix World","description":"Projet conceptuel de parc d'attractions sur le thème des séries."}</script>
+</head>
+<body class="intro-on">
+<a class="skip" href="#main">Aller au contenu</a>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-chev" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-ticket" viewBox="0 0 24 24"><path d="M3 8a2 2 0 0 0 2-2h14a2 2 0 0 0 2 2v2a2 2 0 0 0 0 4v2a2 2 0 0 0-2 2H5a2 2 0 0 0-2-2v-2a2 2 0 0 0 0-4z M14 6v12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-dasharray="0"/></symbol>
+    <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 7v5l3 2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+    <symbol id="i-pin" viewBox="0 0 24 24"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21z" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="9.5" r="2.5" fill="none" stroke="currentColor" stroke-width="1.8"/></symbol>
+    <symbol id="i-ruler" viewBox="0 0 24 24"><path d="M12 3v18M8 6h4M9 10h3M8 14h4M9 18h3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="17" cy="6" r="2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M17 9v5l-1.5 6M17 14l1.5 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+    <symbol id="i-star" viewBox="0 0 24 24"><path d="M12 2.5l2.9 6 6.6.9-4.8 4.6 1.2 6.5L12 17.4l-5.9 3.1 1.2-6.5L2.5 9.4l6.6-.9z" fill="currentColor"/></symbol>
+    <symbol id="i-spark" viewBox="0 0 24 24"><path d="M12 1c.6 5.6 4.4 9.4 11 11-6.6 1.6-10.4 5.4-11 11-.6-5.6-4.4-9.4-11-11 6.6-1.6 10.4-5.4 11-11z" fill="currentColor"/></symbol>
+    <symbol id="i-cal" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M3 10h18M8 3v4M16 3v4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+    <symbol id="i-users" viewBox="0 0 24 24"><circle cx="9" cy="8" r="3.2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6M16 5a3 3 0 0 1 0 6M18 14c2 .7 3.3 2.9 3.3 6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+    <symbol id="i-car" viewBox="0 0 24 24"><path d="M4 16v-4l2-5h12l2 5v4zM4 16v3M20 16v3M4 12h16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><circle cx="7.5" cy="14" r="1" fill="currentColor"/><circle cx="16.5" cy="14" r="1" fill="currentColor"/></symbol>
+    <symbol id="i-train" viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="14" rx="3" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M5 10h14M8 21l2-4M16 21l-2-4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="9" cy="13.5" r="1" fill="currentColor"/><circle cx="15" cy="13.5" r="1" fill="currentColor"/></symbol>
+    <symbol id="i-plane" viewBox="0 0 24 24"><path d="M10 13l-7-3 1.5-1.5 8 1L18 4.5a2 2 0 0 1 2.8 2.8L15 12.5l1 8L14.5 22l-3-7-3 3v2.5L7 22l-1-4-4-1 1.5-1.5H6z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></symbol>
+    <symbol id="i-bus" viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="15" rx="3" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M4 11h16M7 18v3M17 18v3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+    <symbol id="i-park" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="4" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M9 17V7h4a3 3 0 0 1 0 6H9" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></symbol>
+    <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+    <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+    <symbol id="i-search" viewBox="0 0 24 24"><circle cx="11" cy="11" r="6.5" fill="none" stroke="currentColor" stroke-width="1.9"/><path d="M16 16l4.5 4.5" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></symbol>
+    <symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13 2L4 14h7l-1 8 9-12h-7z" fill="currentColor"/></symbol>
+    <symbol id="i-mail" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M3.5 6.5l8.5 6.5 8.5-6.5" fill="none" stroke="currentColor" stroke-width="1.8"/></symbol>
+    <symbol id="i-phone" viewBox="0 0 24 24"><path d="M5 3h4l2 5-2.5 1.5a11 11 0 0 0 6 6L16 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 5a2 2 0 0 1 2-2z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></symbol>
+    <symbol id="i-chat" viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></symbol>
+    <symbol id="i-bed" viewBox="0 0 24 24"><path d="M3 19V6M3 15h18v4M21 15v-3a3 3 0 0 0-3-3h-7v6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="7" cy="11" r="2" fill="none" stroke="currentColor" stroke-width="1.8"/></symbol>
+    <symbol id="i-locker" viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M12 3v18M9 10v2M15 10v2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+    <symbol id="i-stroller" viewBox="0 0 24 24"><path d="M4 5h2l2 9h10l2-6H8M13 4a5 5 0 0 1 5 4" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/><circle cx="9" cy="19" r="1.8" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="17" cy="19" r="1.8" fill="none" stroke="currentColor" stroke-width="1.8"/></symbol>
+    <symbol id="i-access" viewBox="0 0 24 24"><circle cx="12" cy="4.5" r="1.8" fill="currentColor"/><path d="M11 8v6h5l2 5M11 11h5M8.5 11.5A5 5 0 1 0 15 18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-first" viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="14" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M9 6V4h6v2M12 10v6M9 13h6" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+    <symbol id="i-baby" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="9.3" cy="11" r="1" fill="currentColor"/><circle cx="14.7" cy="11" r="1" fill="currentColor"/><path d="M9.5 15c1.5 1.3 3.5 1.3 5 0M12 3.5c1.5 0 2 1.2 1.5 2.2" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></symbol>
+    <symbol id="i-food" viewBox="0 0 24 24"><path d="M6 3v8a2 2 0 0 0 2 2v8M10 3v8a2 2 0 0 1-2 2M8 3v6M17 21V3c-2 1.5-3 4-3 7v4h3" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-shop" viewBox="0 0 24 24"><path d="M5 8h14l-1 13H6zM9 8V6a3 3 0 0 1 6 0v2" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></symbol>
+    <symbol id="i-wifi" viewBox="0 0 24 24"><path d="M2.5 9a14 14 0 0 1 19 0M5.5 12.5a9.5 9.5 0 0 1 13 0M8.5 16a5 5 0 0 1 7 0" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><circle cx="12" cy="19.5" r="1.3" fill="currentColor"/></symbol>
+    <symbol id="i-dog" viewBox="0 0 24 24"><path d="M5 9l1-5 4 3h4l4-3 1 5v5a7 7 0 0 1-14 0z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><circle cx="9.5" cy="12" r="1" fill="currentColor"/><circle cx="14.5" cy="12" r="1" fill="currentColor"/><path d="M11 16h2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></symbol>
+    <symbol id="i-atm" viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="12" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="2.5" fill="none" stroke="currentColor" stroke-width="1.8"/></symbol>
+    <symbol id="i-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z" fill="currentColor"/></symbol>
+    <symbol id="i-insta" viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="17" height="17" rx="5" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="17.2" cy="6.8" r="1.1" fill="currentColor"/></symbol>
+    <symbol id="i-fb" viewBox="0 0 24 24"><path d="M14 8h3V4h-3a4 4 0 0 0-4 4v3H7v4h3v6h4v-6h3l1-4h-4V8.5a.5.5 0 0 1 .5-.5z" fill="currentColor"/></symbol>
+    <symbol id="i-yt" viewBox="0 0 24 24"><rect x="2.5" y="5.5" width="19" height="13" rx="4" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M10 9v6l5-3z" fill="currentColor"/></symbol>
+    <symbol id="i-tiktok" viewBox="0 0 24 24"><path d="M14 3v11.5a3.5 3.5 0 1 1-3.5-3.5M14 3c.5 2.8 2.4 4.6 5 5" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></symbol>
+    <symbol id="i-heart" viewBox="0 0 24 24"><path d="M12 20s-7.5-4.6-9.3-9.2C1.5 7.6 3.6 4.5 7 4.5c2 0 3.5 1.2 5 3 1.5-1.8 3-3 5-3 3.4 0 5.5 3.1 4.3 6.3C19.5 15.4 12 20 12 20z" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"/></symbol>
+    <symbol id="i-heartf" viewBox="0 0 24 24"><path d="M12 20s-7.5-4.6-9.3-9.2C1.5 7.6 3.6 4.5 7 4.5c2 0 3.5 1.2 5 3 1.5-1.8 3-3 5-3 3.4 0 5.5 3.1 4.3 6.3C19.5 15.4 12 20 12 20z" fill="currentColor"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></symbol>
+    <symbol id="i-minus" viewBox="0 0 24 24"><path d="M5 12h14" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></symbol>
+    <symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="7" fill="none" stroke="currentColor" stroke-width="1.9"/><circle cx="12" cy="12" r="2.5" fill="currentColor"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></symbol>
+    <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5z" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"/></symbol>
+    <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="1.9"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></symbol>
+    <symbol id="i-expand" viewBox="0 0 24 24"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-route" viewBox="0 0 24 24"><circle cx="6" cy="18" r="2.5" fill="none" stroke="currentColor" stroke-width="1.9"/><circle cx="18" cy="6" r="2.5" fill="none" stroke="currentColor" stroke-width="1.9"/><path d="M8.5 18H16a3 3 0 0 0 0-6H8a3 3 0 0 1 0-6h7.5" fill="none" stroke="currentColor" stroke-width="1.9" stroke-dasharray="3 2.5"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="2" fill="none" stroke="currentColor" stroke-width="1.9"/><path d="M8 11V8a4 4 0 0 1 8 0v3" fill="none" stroke="currentColor" stroke-width="1.9"/></symbol>
+    <symbol id="i-hammer" viewBox="0 0 24 24"><path d="M14 4l6 6-3 3-6-6zM11 7l-8 8 3 3 8-8M17 3l4 4" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round" stroke-linecap="round"/></symbol>
+    <symbol id="i-film" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2" fill="none" stroke="currentColor" stroke-width="1.9"/><path d="M7 4v16M17 4v16M3 9h4M3 15h4M17 9h4M17 15h4" stroke="currentColor" stroke-width="1.9"/></symbol>
+    <symbol id="i-volume" viewBox="0 0 24 24"><path d="M4 9h4l5-4v14l-5-4H4z" fill="currentColor"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></symbol>
+    <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="1.9"/><path d="M12 11v6M12 7.5v.5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></symbol>
+  <symbol id="i-sound-off" viewBox="0 0 24 24"><path d="M4 9h4l5-4v14l-5-4H4z" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"/><path d="M17 9l5 6M22 9l-5 6" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></symbol>
+<symbol id="i-sound-on" viewBox="0 0 24 24"><path d="M4 9h4l5-4v14l-5-4H4z" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></symbol>
+<symbol id="i-map" viewBox="0 0 24 24"><path d="M3 6l6-2 6 2 6-2v14l-6 2-6-2-6 2zM9 4v14M15 6v14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></symbol>
+<symbol id="i-chevl" viewBox="0 0 24 24"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+<symbol id="i-chevr" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+<symbol id="i-full" viewBox="0 0 24 24"><path d="M4 9V4h5M15 4h5v5M20 15v5h-5M9 20H4v-5" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+<symbol id="i-walk" viewBox="0 0 24 24"><circle cx="13" cy="4" r="2" fill="currentColor"/><path d="M10 21l2-6-2-3 1-4 3 3 3 1M8 11l2-3M14 15l2 6" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+<symbol id="i-up" viewBox="0 0 24 24"><path d="M6 15l6-6 6 6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></symbol>
+<symbol id="i-down" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/></symbol>
+<symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></symbol>
+</defs></svg>
+
+<!-- ============ INTRO VIDÉO ============ -->
+<div class="intro" id="intro" role="dialog" aria-label="Introduction vidéo">
+  <video id="introVideo" src="media/intro.mp4" playsinline muted preload="auto"></video>
+  <div class="intro__ui">
+    <button class="intro__btn" id="introSound"><svg class="ic"><use href="#i-sound-off"/></svg><span>Activer le son</span></button>
+    <button class="intro__btn" id="introSkip">Passer l'intro <svg class="ic"><use href="#i-chevr"/></svg></button>
+  </div>
+</div>
+
+<!-- ============ EN-TÊTE ============ -->
+<header class="header" id="header">
+  <div class="header__in">
+    <a href="#accueil" class="logo" data-link aria-label="Netflix World, accueil">
+      <img class="logo__n" src="img/logo-n.png" alt="" width="34" height="34">
+      <span class="logo__word">NETFLIX<b>WORLD</b></span>
+    </a>
+    <nav class="nav" aria-label="Navigation principale">
+      <ul class="nav__list">
+        <li class="has-mega">
+          <button class="nav__link" aria-expanded="false" aria-controls="mega">Le parc <svg class="ic ic--sm"><use href="#i-chev"/></svg></button>
+          <div class="mega" id="mega"><div class="mega__in">
+            <div class="mega__col">
+              <a href="#decouvrir" data-link class="mega__big">Découvrir le parc</a>
+              <a href="#univers" data-link class="mega__big">Les 7 univers</a>
+              <a href="#decouvrir-restaurants" data-link class="mega__big">Restaurants &amp; boutique</a>
+              <a href="#spectacles" data-link class="mega__big">Spectacles &amp; événements</a>
+            </div>
+            <div class="mega__grid" id="megaUniverses"></div>
+          </div></div>
+        </li>
+        <li><a href="#attractions" class="nav__link" data-link>Attractions</a></li>
+        <li><a href="#plan" class="nav__link" data-link>Plan interactif</a></li>
+        <li><a href="#spectacles" class="nav__link" data-link>Spectacles</a></li>
+        <li><a href="#billets" class="nav__link" data-link>Billets</a></li>
+        <li><a href="#hotel" class="nav__link" data-link>Hôtel Netflix</a></li>
+        <li><a href="#infos" class="nav__link" data-link>Infos pratiques</a></li>
+      </ul>
+    </nav>
+    <div class="header__right">
+      <span class="today"><span class="dot" id="todayDot"></span><span id="todayText"></span></span>
+      <a href="#billets" class="btn btn--red btn--cta" data-link><svg class="ic"><use href="#i-ticket"/></svg><span>Réserver mes billets</span></a>
+      <button class="burger" id="burger" aria-label="Ouvrir le menu" aria-expanded="false" aria-controls="mobileMenu"><svg class="ic"><use href="#i-menu"/></svg></button>
+    </div>
+  </div>
+</header>
+
+<div class="mmenu" id="mobileMenu" aria-hidden="true">
+  <div class="mmenu__in">
+    <div class="mmenu__top">
+      <a href="#accueil" class="logo" data-link><img class="logo__n" src="img/logo-n.png" alt="" width="34" height="34"><span class="logo__word">NETFLIX<b>WORLD</b></span></a>
+      <button class="burger" id="mclose" aria-label="Fermer le menu"><svg class="ic"><use href="#i-close"/></svg></button>
+    </div>
+    <nav class="mmenu__nav" aria-label="Menu mobile">
+      <a href="#accueil" data-link>Accueil</a><a href="#decouvrir" data-link>Découvrir le parc</a><a href="#univers" data-link>Les univers</a>
+      <a href="#attractions" data-link>Attractions</a><a href="#plan" data-link>Plan interactif</a><a href="#spectacles" data-link>Spectacles</a>
+      <a href="#billets" data-link>Billets &amp; tarifs</a><a href="#hotel" data-link>Hôtel Netflix</a><a href="#infos" data-link>Infos pratiques</a><a href="#contact" data-link>Contact</a>
+    </nav>
+    <a href="#billets" class="btn btn--red btn--block btn--lg" data-link><svg class="ic"><use href="#i-ticket"/></svg>Réserver mes billets</a>
+  </div>
+</div>
+
+<div class="curtain" id="curtain" aria-hidden="true"><img src="img/logo-n.png" alt=""></div>
+
+<main id="main" tabindex="-1">
+
+<!-- =============================== ACCUEIL =============================== -->
+<div class="page" data-page="accueil" data-title="Netflix World – Le parc des séries">
+  <section class="billboard" id="billboard" aria-roledescription="carrousel" aria-label="À la une">
+    <div class="billboard__slides" id="bbSlides"></div>
+    <canvas class="billboard__fx" id="heroSparks" aria-hidden="true"></canvas>
+    <div class="billboard__shade"></div>
+    <div class="billboard__content" id="bbContent" aria-live="polite"></div>
+    <div class="billboard__dots" id="bbDots" role="tablist" aria-label="Choisir une diapositive"></div>
+  </section>
+
+  <form class="quickbook" id="quickbook" aria-label="Préparer ma visite">
+    <label class="qb__f"><span><svg class="ic ic--sm"><use href="#i-cal"/></svg> Date de visite</span><input type="date" id="qbDate" required></label>
+    <label class="qb__f"><span><svg class="ic ic--sm"><use href="#i-users"/></svg> Adultes</span><select id="qbAdults"><option>1</option><option selected>2</option><option>3</option><option>4</option><option>5</option><option>6</option></select></label>
+    <label class="qb__f"><span><svg class="ic ic--sm"><use href="#i-users"/></svg> Enfants (3-11 ans)</span><select id="qbKids"><option>0</option><option>1</option><option selected>2</option><option>3</option><option>4</option></select></label>
+    <p class="qb__status" id="qbStatus" aria-live="polite"></p>
+    <button class="btn btn--red btn--lg" type="submit">Voir les tarifs <svg class="ic"><use href="#i-arrow"/></svg></button>
+  </form>
+
+  <section class="row">
+    <div class="row__head"><h2 class="row__title">Les univers du parc</h2><a href="#univers" class="row__more" data-link>Tout explorer <svg class="ic ic--sm"><use href="#i-chevr"/></svg></a></div>
+    <div class="slider"><button class="slider__arrow slider__arrow--l" data-slide="-1" aria-label="Précédent"><svg class="ic"><use href="#i-chevl"/></svg></button>
+      <div class="slider__track" id="homeUniverses"></div>
+      <button class="slider__arrow slider__arrow--r" data-slide="1" aria-label="Suivant"><svg class="ic"><use href="#i-chevr"/></svg></button></div>
+  </section>
+
+  <section class="row">
+    <div class="row__head"><h2 class="row__title"><span class="top10">TOP<b>10</b></span> Les attractions du moment</h2><a href="#attractions" class="row__more" data-link>Toutes les attractions <svg class="ic ic--sm"><use href="#i-chevr"/></svg></a></div>
+    <div class="slider"><button class="slider__arrow slider__arrow--l" data-slide="-1" aria-label="Précédent"><svg class="ic"><use href="#i-chevl"/></svg></button>
+      <div class="slider__track slider__track--top" id="homeTop"></div>
+      <button class="slider__arrow slider__arrow--r" data-slide="1" aria-label="Suivant"><svg class="ic"><use href="#i-chevr"/></svg></button></div>
+  </section>
+
+  <section class="section welcome">
+    <div class="wrap welcome__grid">
+      <div class="welcome__mascot reveal"><img src="img/mascotte.webp" alt="La mascotte de Netflix World, un N rouge souriant avec casquette et baskets" width="640" height="960"><span class="bubble">Bienvenue&nbsp;! Je te fais visiter&nbsp;?</span></div>
+      <div>
+        <p class="kicker reveal">Bienvenue à Netflix World</p>
+        <h2 class="h2 reveal">Vos séries préférées,<br><span class="red">en vrai.</span></h2>
+        <p class="lead reveal">Passez le grand portique NW et entrez dans les histoires que vous regardez chaque soir : le laboratoire d'Hawkins, le Continent, l'arène de Squid Game, le musée de Lupin, les vagues des Outer Banks, la Grand Line et les salons des Bridgerton.</p>
+        <p class="reveal muted">Des attractions pour tous les âges, un grand spectacle chaque soir, cinq restaurants thématiques et l'Hôtel Netflix pour prolonger l'aventure.</p>
+        <div class="stats reveal">
+          <div><strong data-count="7">0</strong><span>univers</span></div>
+          <div><strong data-count="9">0</strong><span>attractions</span></div>
+          <div><strong data-count="5">0</strong><span>restaurants</span></div>
+          <div><strong data-count="4">0</strong><span>étages à l'hôtel</span></div>
+        </div>
+        <div class="btns reveal"><a href="#decouvrir" class="btn btn--white" data-link><svg class="ic"><use href="#i-play"/></svg>Découvrir le parc</a><a href="#plan" class="btn btn--gray" data-link><svg class="ic"><use href="#i-map"/></svg>Ouvrir le plan</a></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="mapteaser">
+    <a href="#plan" data-link class="mapteaser__link" aria-label="Ouvrir le plan interactif du parc">
+      <img src="img/map.webp" alt="Plan illustré de Netflix World" loading="lazy" width="3398" height="1852">
+      <span class="mapteaser__pins" id="teaserPins" aria-hidden="true"></span>
+      <span class="mapteaser__shade"></span>
+      <span class="mapteaser__text"><span class="kicker">Nouveau</span><strong>Le plan interactif</strong><span>Zoomez, filtrez, construisez votre parcours et découvrez les zones à venir.</span><span class="btn btn--red"><svg class="ic"><use href="#i-map"/></svg>Explorer le plan</span></span>
+    </a>
+  </section>
+
+  <section class="nightshow">
+    <img class="nightshow__img" src="img/aerial.webp" alt="" loading="lazy">
+    <canvas class="nightshow__fx" data-fx="fireworks" aria-hidden="true"></canvas>
+    <div class="wrap nightshow__in">
+      <p class="kicker reveal">Tous les soirs à la fermeture</p>
+      <h2 class="display reveal">Le Grand Spectacle du Soir</h2>
+      <p class="lead reveal">Son, lumière et feux d'artifice sur la place centrale : tous les univers du parc se retrouvent pour le final de la journée.</p>
+      <a href="#spectacles" class="btn btn--white reveal" data-link>Spectacles &amp; événements <svg class="ic"><use href="#i-arrow"/></svg></a>
+    </div>
+  </section>
+
+  <section class="row">
+    <div class="row__head"><h2 class="row__title">Prochainement à Netflix World</h2><a href="#plan" class="row__more" data-link>Voir sur le plan <svg class="ic ic--sm"><use href="#i-chevr"/></svg></a></div>
+    <div class="slider"><div class="slider__track" id="homeSoon"></div></div>
+  </section>
+
+  <section class="section">
+    <div class="wrap">
+      <div class="head-c"><p class="kicker reveal">Billets &amp; offres</p><h2 class="h2 reveal">Choisissez votre <span class="red">formule</span></h2></div>
+      <div class="offers" id="homeOffers"></div>
+      <p class="fine">Prix <strong>fictifs</strong> : Netflix World est un projet conceptuel.</p>
+    </div>
+  </section>
+
+  <section class="hotelteaser">
+    <img src="img/hotel.webp" alt="La façade illuminée de l'Hôtel Netflix" loading="lazy">
+    <div class="wrap hotelteaser__in">
+      <p class="kicker reveal">Dormir dans le parc</p>
+      <h2 class="display reveal">Hôtel Netflix</h2>
+      <p class="lead reveal">Une façade immense, un atrium doré et rouge ouvert sur plusieurs étages, des écrans géants dans l'architecture… et un univers différent à chaque étage.</p>
+      <div class="btns reveal"><a href="#hotel" class="btn btn--white" data-link>Découvrir l'hôtel</a><button class="btn btn--gray" data-book="sejour">Réserver un séjour</button></div>
+    </div>
+  </section>
+
+  <section class="row">
+    <div class="row__head"><h2 class="row__title">Restaurants thématiques</h2><a href="#decouvrir-restaurants" class="row__more" data-link>Tous les restaurants <svg class="ic ic--sm"><use href="#i-chevr"/></svg></a></div>
+    <div class="slider"><div class="slider__track" id="homeFood"></div></div>
+  </section>
+
+  <section class="section section--tight">
+    <div class="wrap info-tiles">
+      <a class="itile reveal" href="#infos" data-link><svg class="ic ic--lg"><use href="#i-clock"/></svg><strong>Horaires</strong><span id="homeHours">—</span></a>
+      <a class="itile reveal" href="#infos-acces" data-link><svg class="ic ic--lg"><use href="#i-pin"/></svg><strong>Accès</strong><span>Voiture, train, navette</span></a>
+      <a class="itile reveal" href="#plan" data-link><svg class="ic ic--lg"><use href="#i-map"/></svg><strong>Plan</strong><span>Interactif</span></a>
+      <a class="itile reveal" href="#infos-faq" data-link><svg class="ic ic--lg"><use href="#i-chat"/></svg><strong>FAQ</strong><span>Vos questions</span></a>
+    </div>
+  </section>
+</div>
+
+<!-- =============================== DÉCOUVRIR =============================== -->
+<div class="page" data-page="decouvrir" data-title="Découvrir le parc – Netflix World" hidden>
+  <section class="phero" data-bg="img/arch.webp">
+    <div class="wrap phero__in">
+      <nav class="crumbs" aria-label="Fil d'Ariane"><a href="#accueil" data-link>Accueil</a><span>Découvrir le parc</span></nav>
+      <h1 class="phero__title">Découvrir Netflix World</h1>
+      <p class="phero__lead">Un parc pour tous les âges, construit autour des séries et des films les plus appréciés du public.</p>
+    </div>
+  </section>
+  <section class="section">
+    <div class="wrap split">
+      <figure class="split__img reveal"><img src="img/aerial.webp" alt="Vue aérienne du parc" loading="lazy"></figure>
+      <div><p class="kicker reveal">Le concept</p><h2 class="h2 reveal">Sept séries,<br><span class="red">un seul parc</span></h2>
+      <p class="lead reveal">Chaque zone reprend l'univers d'une série Netflix : décors, musique, restaurants et attractions. De la maison hantée de Stranger Things au labyrinthe des Bridgerton, il y en a pour tous les âges.</p>
+      <a href="#univers" class="btn btn--red reveal" data-link>Voir les univers <svg class="ic"><use href="#i-arrow"/></svg></a></div>
+    </div>
+  </section>
+  <section class="section section--dark" id="decouvrir-restaurants">
+    <div class="wrap">
+      <div class="head-l"><p class="kicker reveal">Se restaurer</p><h2 class="h2 reveal">5 restaurants <span class="red">thématiques</span></h2></div>
+      <div class="food" id="foodGrid"></div>
+    </div>
+  </section>
+  <section class="section">
+    <div class="wrap split split--rev">
+      <figure class="split__img reveal"><img src="img/shop.webp" alt="Intérieur de la boutique avec des t-shirts NW" loading="lazy"></figure>
+      <div><p class="kicker reveal">Shopping</p><h2 class="h2 reveal">La Boutique<br><span class="red">Netflix World</span></h2>
+      <p class="lead reveal">Une grande boutique qui réunit les produits dérivés de tous les univers du parc : vêtements, figurines, accessoires et souvenirs.</p>
+      <ul class="ticks reveal"><li>À côté de l'entrée, ouverte jusqu'à la fermeture</li><li>Livraison des achats à l'Hôtel Netflix</li></ul></div>
+    </div>
+  </section>
+  <section class="section section--dark">
+    <div class="wrap split">
+      <div class="mascot__img reveal"><img src="img/mascotte.webp" alt="La mascotte de Netflix World" loading="lazy"></div>
+      <div><p class="kicker reveal">Notre mascotte</p><h2 class="h2 reveal">Le <span class="red">N</span> le plus<br>sympa du parc</h2>
+      <p class="lead reveal">Casquette vissée sur la tête et baskets aux pieds, notre mascotte accueille les visiteurs à l'entrée, pose pour les photos et participe au grand spectacle du soir.</p>
+      <p class="reveal muted">Retrouvez-la chaque jour à l'entrée à 10 h 30, 13 h 30 et 16 h.</p></div>
+    </div>
+  </section>
+</div>
+
+<!-- =============================== UNIVERS =============================== -->
+<div class="page" data-page="univers" data-title="Les univers – Netflix World" hidden>
+  <section class="phero" data-bg="img/witcher.webp">
+    <div class="wrap phero__in">
+      <nav class="crumbs" aria-label="Fil d'Ariane"><a href="#accueil" data-link>Accueil</a><span>Les univers</span></nav>
+      <h1 class="phero__title">7 univers, 7 séries</h1>
+      <p class="phero__lead">Choisissez votre série et entrez dans son monde.</p>
+      <div class="phero__jump" id="universeJump"></div>
+    </div>
+  </section>
+  <div id="universeSections"></div>
+</div>
+
+<!-- =============================== ATTRACTIONS =============================== -->
+<div class="page" data-page="attractions" data-title="Les attractions – Netflix World" hidden>
+  <section class="phero" data-bg="img/onepiece.webp">
+    <div class="wrap phero__in">
+      <nav class="crumbs" aria-label="Fil d'Ariane"><a href="#accueil" data-link>Accueil</a><span>Attractions</span></nav>
+      <h1 class="phero__title">Les attractions</h1>
+      <p class="phero__lead">Maison hantée, montagnes russes, réalité virtuelle, escape game : trouvez celles qui vous correspondent.</p>
+    </div>
+  </section>
+  <section class="section section--tight">
+    <div class="wrap">
+      <div class="filters" role="search">
+        <label class="search"><svg class="ic"><use href="#i-search"/></svg><input type="search" id="fSearch" placeholder="Rechercher une attraction" aria-label="Rechercher une attraction"></label>
+        <label class="select"><span class="sr">Univers</span><select id="fUniverse"><option value="all">Tous les univers</option></select></label>
+        <label class="select"><span class="sr">Type</span><select id="fCat"><option value="all">Tous les types</option><option value="sensations">Sensations</option><option value="famille">Famille</option><option value="aquatique">Aquatique</option></select></label>
+        <label class="select"><span class="sr">Taille</span><select id="fHeight"><option value="999">Toutes les tailles</option><option value="110">Moins d'1,10 m</option><option value="120">Moins d'1,20 m</option><option value="130">Moins d'1,30 m</option></select></label>
+      </div>
+      <p class="fcount" id="fCount" aria-live="polite"></p>
+      <div class="agrid" id="attractionGrid"></div>
+    </div>
+  </section>
+</div>
+
+<!-- =============================== PLAN =============================== -->
+<div class="page" data-page="plan" data-title="Plan interactif – Netflix World" hidden>
+  <section class="mapapp" id="mapapp">
+    <aside class="mapside">
+      <div class="mapside__head">
+        <h1 class="mapside__title">Plan interactif</h1>
+        <div class="tabs" role="tablist">
+          <button class="tab is-on" role="tab" aria-selected="true" data-tab="explore">Explorer</button>
+          <button class="tab" role="tab" aria-selected="false" data-tab="route">Mon parcours <span class="tab__n" id="routeCount">0</span></button>
+        </div>
+      </div>
+      <div class="mapside__body" data-pane="explore">
+        <label class="search"><svg class="ic"><use href="#i-search"/></svg><input type="search" id="mSearch" placeholder="Rechercher un lieu" aria-label="Rechercher un lieu"></label>
+        <div class="mcats" id="mCats"></div>
+        <label class="mheight"><span>Taille de l'enfant</span><select id="mHeight"><option value="999">Pas de limite</option><option value="105">Moins d'1,10 m</option><option value="115">1,10 à 1,19 m</option><option value="125">1,20 à 1,29 m</option></select></label>
+        <ul class="mlist" id="mList"></ul>
+      </div>
+      <div class="mapside__body" data-pane="route" hidden>
+        <p class="muted small">Ajoutez des lieux avec <strong>+ Parcours</strong>. Le temps de marche est calculé d'après les distances sur le plan, en partant de l'entrée.</p>
+        <ol class="route" id="routeList"></ol>
+        <div class="route__sum" id="routeSum"></div>
+        <div class="btns"><button class="btn btn--gray btn--sm" id="routeOpt">Optimiser l'ordre</button><button class="btn btn--gray btn--sm" id="routeClear">Vider</button></div>
+      </div>
+    </aside>
+    <div class="mapstage" id="mapstage" tabindex="0" aria-label="Plan du parc. Flèches pour se déplacer, plus et moins pour zoomer.">
+      <div class="mapworld" id="mapworld">
+        <img src="img/map.webp" alt="Plan illustré de Netflix World" draggable="false" width="3398" height="1852">
+        <div class="maplabels" id="mapLabels"></div>
+        <svg class="maproute" id="mapRoute" viewBox="0 0 1699 926" preserveAspectRatio="none" aria-hidden="true"></svg>
+        <div class="maplayer" id="mapLayer"></div>
+      </div>
+      <div class="mapctl">
+        <button class="mapctl__b" data-z="1" aria-label="Zoomer"><svg class="ic"><use href="#i-plus"/></svg></button>
+        <button class="mapctl__b" data-z="-1" aria-label="Dézoomer"><svg class="ic"><use href="#i-minus"/></svg></button>
+        <button class="mapctl__b" data-z="0" aria-label="Recentrer"><svg class="ic"><use href="#i-target"/></svg></button>
+        <button class="mapctl__b" id="mapFull" aria-label="Plein écran"><svg class="ic"><use href="#i-full"/></svg></button>
+      </div>
+      <div class="mapcard" id="mapCard" hidden></div>
+      <p class="maphint">Glissez pour vous déplacer · molette ou pincement pour zoomer</p>
+    </div>
+  </section>
+</div>
+
+<!-- =============================== SPECTACLES =============================== -->
+<div class="page" data-page="spectacles" data-title="Spectacles & événements – Netflix World" hidden>
+  <section class="phero phero--night" data-bg="img/aerial.webp">
+    <canvas class="phero__fx" data-fx="fireworks" aria-hidden="true"></canvas>
+    <div class="wrap phero__in">
+      <nav class="crumbs" aria-label="Fil d'Ariane"><a href="#accueil" data-link>Accueil</a><span>Spectacles &amp; événements</span></nav>
+      <h1 class="phero__title">Spectacles &amp; événements</h1>
+      <p class="phero__lead">Le grand spectacle du soir, la mascotte et les saisons du parc.</p>
+    </div>
+  </section>
+  <section class="section"><div class="wrap events" id="eventsList"></div></section>
+  <section class="section section--dark">
+    <div class="wrap">
+      <div class="head-l"><p class="kicker reveal">Aujourd'hui</p><h2 class="h2 reveal">Le programme</h2><p class="muted" id="nowLine"></p></div>
+      <div class="schedule" id="schedule"></div>
+    </div>
+  </section>
+</div>
+
+<!-- =============================== BILLETS =============================== -->
+<div class="page" data-page="billets" data-title="Billets & tarifs – Netflix World" hidden>
+  <section class="phero" data-bg="img/arch.webp">
+    <div class="wrap phero__in">
+      <nav class="crumbs" aria-label="Fil d'Ariane"><a href="#accueil" data-link>Accueil</a><span>Billets &amp; tarifs</span></nav>
+      <h1 class="phero__title">Billets &amp; tarifs</h1>
+      <p class="phero__lead">Choisissez la formule, la date et les visiteurs : le total se calcule en direct.</p>
+    </div>
+  </section>
+  <section class="section section--tight"><div class="wrap"><div class="offers offers--page" id="pageOffers"></div></div></section>
+  <section class="section section--dark" id="configurator">
+    <div class="wrap booking">
+      <form class="bform" id="bookingForm" novalidate>
+        <h2 class="h3">Composez votre visite</h2>
+        <fieldset class="bstep"><legend><span>1</span> Formule</legend><div class="bformulas" id="bkFormulas"></div></fieldset>
+        <fieldset class="bstep"><legend><span>2</span> Date</legend>
+          <input type="date" id="bkDate" class="input" required aria-describedby="bkDateInfo"><p class="bdate" id="bkDateInfo"></p>
+          <label class="select" id="bkNightsWrap" hidden><span class="sr">Nuits</span><select id="bkNights"><option value="1">1 nuit</option><option value="2">2 nuits</option><option value="3">3 nuits</option></select></label>
+        </fieldset>
+        <fieldset class="bstep"><legend><span>3</span> Visiteurs</legend>
+          <div class="qty" data-qty="adults"><div><strong>Adultes</strong><small>12 ans et plus</small></div><div class="qty__c"><button type="button" data-d="-1" aria-label="Retirer un adulte">−</button><output id="qAdults">2</output><button type="button" data-d="1" aria-label="Ajouter un adulte">+</button></div></div>
+          <div class="qty" data-qty="kids"><div><strong>Enfants</strong><small>3 à 11 ans</small></div><div class="qty__c"><button type="button" data-d="-1" aria-label="Retirer un enfant">−</button><output id="qKids">2</output><button type="button" data-d="1" aria-label="Ajouter un enfant">+</button></div></div>
+          <div class="qty" data-qty="babies"><div><strong>Bébés</strong><small>Moins de 3 ans · gratuit</small></div><div class="qty__c"><button type="button" data-d="-1" aria-label="Retirer un bébé">−</button><output id="qBabies">0</output><button type="button" data-d="1" aria-label="Ajouter un bébé">+</button></div></div>
+        </fieldset>
+        <fieldset class="bstep"><legend><span>4</span> Options</legend>
+          <label class="opt"><input type="checkbox" id="oParking"><span class="opt__box"></span><span><strong>Parking</strong><small>15 € par jour</small></span></label>
+          <label class="opt"><input type="checkbox" id="oPass"><span class="opt__box"></span><span><strong>Pass Coupe-file</strong><small>35 € / pers. / jour</small></span></label>
+          <label class="opt"><input type="checkbox" id="oMeal"><span class="opt__box"></span><span><strong>Formule déjeuner</strong><small>18 € / pers. / jour, dans les 5 restaurants</small></span></label>
+        </fieldset>
+      </form>
+      <aside class="summary" aria-live="polite">
+        <div class="summary__img" id="sumImg"></div>
+        <div class="summary__body">
+          <p class="kicker">Récapitulatif</p><h3 id="sumTitle"></h3><p class="muted" id="sumDate"></p>
+          <ul class="summary__lines" id="sumLines"></ul>
+          <div class="summary__total"><span>Total <small>(prix fictif)</small></span><strong id="sumTotal">0 €</strong></div>
+          <p class="summary__err" id="sumErr" role="alert"></p>
+          <button class="btn btn--red btn--block btn--lg" type="submit" form="bookingForm">Valider</button>
+          <p class="summary__note">Projet conceptuel : aucune réservation ni aucun paiement n'est effectué.</p>
+        </div>
+      </aside>
+    </div>
+  </section>
+</div>
+
+<!-- =============================== HÔTEL =============================== -->
+<div class="page" data-page="hotel" data-title="Hôtel Netflix – Netflix World" hidden>
+  <section class="phero" data-bg="img/hotel.webp">
+    <div class="wrap phero__in">
+      <nav class="crumbs" aria-label="Fil d'Ariane"><a href="#accueil" data-link>Accueil</a><span>Hôtel Netflix</span></nav>
+      <h1 class="phero__title">Hôtel Netflix</h1>
+      <p class="phero__lead">Une façade immense, un intérieur doré et rouge, et un univers à chaque étage.</p>
+      <div class="btns"><button class="btn btn--red btn--lg" data-book="sejour"><svg class="ic"><use href="#i-bed"/></svg>Réserver un séjour</button></div>
+    </div>
+  </section>
+  <section class="section">
+    <div class="wrap split">
+      <figure class="split__img reveal"><img src="img/hotel-tall.webp" alt="La façade de l'Hôtel Netflix au crépuscule" loading="lazy"></figure>
+      <div><p class="kicker reveal">L'hôtel</p><h2 class="h2 reveal">Un atrium <span class="red">rouge et or</span></h2>
+      <p class="lead reveal">Au centre, un grand atrium ouvert sur plusieurs étages. Des écrans géants sont intégrés à l'architecture, et le mobilier, luxueux et contemporain, mélange le doré et le rouge.</p>
+      <ul class="ticks reveal"><li>Dans le parc, à côté de la Boutique</li><li>Accès anticipé aux attractions</li><li>Petit-déjeuner avec la mascotte le week-end</li></ul></div>
+    </div>
+  </section>
+  <section class="section section--dark">
+    <div class="wrap">
+      <div class="head-l"><p class="kicker reveal">Un thème par étage</p><h2 class="h2 reveal">Les 4 <span class="red">étages</span></h2></div>
+      <div class="floors" id="floors"></div>
+    </div>
+  </section>
+</div>
+
+<!-- =============================== INFOS =============================== -->
+<div class="page" data-page="infos" data-title="Infos pratiques – Netflix World" hidden>
+  <section class="phero" data-bg="img/aerial.webp">
+    <div class="wrap phero__in">
+      <nav class="crumbs" aria-label="Fil d'Ariane"><a href="#accueil" data-link>Accueil</a><span>Infos pratiques</span></nav>
+      <h1 class="phero__title">Infos pratiques</h1>
+      <p class="phero__lead">Horaires, accès, parking, services et questions fréquentes.</p>
+      <div class="phero__jump"><a href="#infos-horaires" class="pill" data-link>Horaires</a><a href="#plan" class="pill" data-link>Plan</a><a href="#infos-acces" class="pill" data-link>Accès</a><a href="#infos-faq" class="pill" data-link>FAQ</a></div>
+    </div>
+  </section>
+  <section class="section" id="infos-horaires">
+    <div class="wrap hours">
+      <div><p class="kicker reveal">Calendrier</p><h2 class="h2 reveal">Quand venir ?</h2>
+        <p class="lead reveal">Sélectionnez un jour pour voir les horaires.</p>
+        <ul class="legend"><li><i class="lgc lgc--open"></i>Ouvert</li><li><i class="lgc lgc--late"></i>Nocturne / événement</li><li><i class="lgc lgc--closed"></i>Fermé</li></ul>
+        <div class="dayinfo" id="dayInfo"></div></div>
+      <div class="cal" id="calendar"></div>
+    </div>
+  </section>
+  <section class="section section--dark" id="infos-acces">
+    <div class="wrap">
+      <div class="head-l"><p class="kicker reveal">Venir</p><h2 class="h2 reveal">Accès &amp; parking</h2><p class="muted">1 avenue des Séries, 77990 (adresse fictive)</p></div>
+      <div class="access">
+        <div class="acc reveal"><svg class="ic ic--xl"><use href="#i-car"/></svg><h3>En voiture</h3><p>Autoroute A4, sortie « Netflix World ». 45 min de Paris.</p></div>
+        <div class="acc reveal"><svg class="ic ic--xl"><use href="#i-train"/></svg><h3>En train</h3><p>Gare TGV à 300 m de l'entrée, RER direct depuis Paris.</p></div>
+        <div class="acc reveal"><svg class="ic ic--xl"><use href="#i-bus"/></svg><h3>En navette</h3><p>Navette depuis Paris chaque matin, retour après le spectacle.</p></div>
+        <div class="acc reveal"><svg class="ic ic--xl"><use href="#i-park"/></svg><h3>Parking</h3><p>6 000 places · 15 € / jour (fictif) · inclus pour l'hôtel.</p></div>
+      </div>
+      <div class="services" id="services"></div>
+    </div>
+  </section>
+  <section class="section" id="infos-faq">
+    <div class="wrap faqwrap">
+      <div><p class="kicker reveal">FAQ</p><h2 class="h2 reveal">Questions fréquentes</h2><a href="#contact" class="btn btn--gray reveal" data-link>Nous contacter</a></div>
+      <div class="faq" id="faq"></div>
+    </div>
+  </section>
+</div>
+
+<!-- =============================== CONTACT =============================== -->
+<div class="page" data-page="contact" data-title="Contact – Netflix World" hidden>
+  <section class="phero" data-bg="img/restaurant.webp">
+    <div class="wrap phero__in">
+      <nav class="crumbs" aria-label="Fil d'Ariane"><a href="#accueil" data-link>Accueil</a><span>Contact</span></nav>
+      <h1 class="phero__title">Contact</h1>
+      <p class="phero__lead">Une question sur votre visite, un groupe, un séjour ? Écrivez-nous.</p>
+    </div>
+  </section>
+  <section class="section">
+    <div class="wrap contact">
+      <div class="contact__side">
+        <div class="ccard reveal"><svg class="ic ic--lg"><use href="#i-phone"/></svg><div><strong>Téléphone</strong><span>01 00 00 00 00 (fictif)</span></div></div>
+        <div class="ccard reveal"><svg class="ic ic--lg"><use href="#i-mail"/></svg><div><strong>E-mail</strong><span>contact@netflixworld.example</span></div></div>
+        <div class="ccard reveal"><svg class="ic ic--lg"><use href="#i-users"/></svg><div><strong>Groupes &amp; écoles</strong><span>À partir de 20 personnes</span></div></div>
+      </div>
+      <form class="cform reveal" id="contactForm" novalidate>
+        <div class="cform__row">
+          <label class="field"><span>Prénom</span><input name="first" required autocomplete="given-name"><em></em></label>
+          <label class="field"><span>Nom</span><input name="last" required autocomplete="family-name"><em></em></label>
+        </div>
+        <label class="field"><span>E-mail</span><input name="email" type="email" required autocomplete="email"><em></em></label>
+        <label class="field"><span>Sujet</span><select name="topic" required><option value="">Choisir</option><option>Billetterie</option><option>Hôtel Netflix</option><option>Groupes</option><option>Accessibilité</option><option>Autre</option></select><em></em></label>
+        <label class="field"><span>Message</span><textarea name="msg" rows="5" required minlength="20"></textarea><em></em></label>
+        <button class="btn btn--red btn--lg" type="submit">Envoyer</button>
+        <p class="cform__ok" id="contactOk" role="status"></p>
+      </form>
+    </div>
+  </section>
+</div>
+</main>
+
+<!-- Mascotte flottante -->
+<div class="buddy" id="buddy">
+  <div class="buddy__panel" id="buddyPanel" hidden>
+    <p><strong>Salut !</strong> Je t'emmène où ?</p>
+    <a href="#plan" data-link><svg class="ic ic--sm"><use href="#i-map"/></svg> Le plan interactif</a>
+    <a href="#attractions" data-link><svg class="ic ic--sm"><use href="#i-bolt"/></svg> Les attractions</a>
+    <a href="#billets" data-link><svg class="ic ic--sm"><use href="#i-ticket"/></svg> Les billets</a>
+    <a href="#infos" data-link><svg class="ic ic--sm"><use href="#i-clock"/></svg> Les horaires</a>
+  </div>
+  <button class="buddy__btn" id="buddyBtn" aria-expanded="false" aria-controls="buddyPanel" aria-label="Ouvrir l'aide de la mascotte"><img src="img/mascotte.webp" alt=""></button>
+</div>
+
+<footer class="footer">
+  <div class="wrap footer__news">
+    <div><h2 class="h3">Ne manquez aucune nouveauté</h2><p class="muted">Nouvelles attractions, zones à venir et offres, une fois par mois.</p></div>
+    <form class="news" id="newsForm" novalidate><label class="sr" for="newsEmail">E-mail</label><input type="email" id="newsEmail" placeholder="Adresse e-mail" required><button class="btn btn--red" type="submit">S'inscrire <svg class="ic"><use href="#i-chevr"/></svg></button><p class="news__msg" id="newsMsg" role="status"></p></form>
+  </div>
+  <div class="wrap footer__grid">
+    <div><a href="#accueil" class="logo" data-link><img class="logo__n" src="img/logo-n.png" alt="" width="34" height="34"><span class="logo__word">NETFLIX<b>WORLD</b></span></a>
+      <div class="socials"><a href="https://www.instagram.com" aria-label="Instagram"><svg class="ic"><use href="#i-insta"/></svg></a><a href="https://www.youtube.com" aria-label="YouTube"><svg class="ic"><use href="#i-yt"/></svg></a><a href="https://www.tiktok.com" aria-label="TikTok"><svg class="ic"><use href="#i-tiktok"/></svg></a><a href="https://www.facebook.com" aria-label="Facebook"><svg class="ic"><use href="#i-fb"/></svg></a></div></div>
+    <div><h3>Le parc</h3><a href="#decouvrir" data-link>Découvrir</a><a href="#univers" data-link>Univers</a><a href="#attractions" data-link>Attractions</a><a href="#plan" data-link>Plan interactif</a></div>
+    <div><h3>Réserver</h3><a href="#billets" data-link>Billets</a><a href="#hotel" data-link>Hôtel Netflix</a><a href="#spectacles" data-link>Spectacles</a></div>
+    <div><h3>Aide</h3><a href="#infos" data-link>Infos pratiques</a><a href="#infos-faq" data-link>FAQ</a><a href="#contact" data-link>Contact</a><button class="linklike" id="replayIntro">Revoir l'intro</button></div>
+  </div>
+  <p class="wrap footer__legal">Netflix World est un projet conceptuel non officiel, non affilié à Netflix, Inc. Les noms de séries et marques citées appartiennent à leurs propriétaires. Prix, adresses et horaires fictifs.</p>
+</footer>
+
+<div class="modal" id="modal" hidden>
+  <div class="modal__bg" data-close></div>
+  <div class="modal__box" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <button class="modal__x" data-close aria-label="Fermer"><svg class="ic"><use href="#i-close"/></svg></button>
+    <div id="modalBody"></div>
+  </div>
+</div>
+
+<script src="js/data.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
