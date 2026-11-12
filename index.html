@@ -341,12 +341,18 @@
         <h1 class="mapside__title">Plan interactif</h1>
         <div class="tabs" role="tablist">
           <button class="tab is-on" role="tab" aria-selected="true" data-tab="explore">Explorer</button>
-          <button class="tab" role="tab" aria-selected="false" data-tab="route">Mon parcours <span class="tab__n" id="routeCount">0</span></button>
+          <button class="tab" role="tab" aria-selected="false" data-tab="route">Parcours <span class="tab__n" id="routeCount">0</span></button>
+          <button class="tab" role="tab" aria-selected="false" data-tab="vq">Mes files <span class="tab__n" id="vqCount">0</span></button>
         </div>
+        <p class="livebar" id="liveBar"><span class="livedot"></span><span id="liveText">Temps d'attente en direct</span></p>
       </div>
       <div class="mapside__body" data-pane="explore">
         <label class="search"><svg class="ic"><use href="#i-search"/></svg><input type="search" id="mSearch" placeholder="Rechercher un lieu" aria-label="Rechercher un lieu"></label>
         <div class="mcats" id="mCats"></div>
+        <div class="mrow">
+          <label class="mheight"><span>Trier</span><select id="mSort"><option value="zone">Par catégorie</option><option value="wait">Attente la plus courte</option><option value="waitdesc">Attente la plus longue</option></select></label>
+          <label class="mtoggle"><input type="checkbox" id="mShowWait" checked><span class="mtoggle__s"></span>Attentes sur le plan</label>
+        </div>
         <label class="mheight"><span>Taille de l'enfant</span><select id="mHeight"><option value="999">Pas de limite</option><option value="105">Moins d'1,10 m</option><option value="115">1,10 à 1,19 m</option><option value="125">1,20 à 1,29 m</option></select></label>
         <ul class="mlist" id="mList"></ul>
       </div>
@@ -355,6 +361,10 @@
         <ol class="route" id="routeList"></ol>
         <div class="route__sum" id="routeSum"></div>
         <div class="btns"><button class="btn btn--gray btn--sm" id="routeOpt">Optimiser l'ordre</button><button class="btn btn--gray btn--sm" id="routeClear">Vider</button></div>
+      </div>
+      <div class="mapside__body" data-pane="vq" hidden>
+        <p class="muted small">Réservez un créneau de retour au lieu de faire la queue : profitez du parc et présentez-vous à l'entrée de l'attraction pendant votre créneau. <strong>2 files virtuelles maximum</strong> en même temps.</p>
+        <div class="vqlist" id="vqList"></div>
       </div>
     </aside>
     <div class="mapstage" id="mapstage" tabindex="0" aria-label="Plan du parc. Flèches pour se déplacer, plus et moins pour zoomer.">
@@ -370,7 +380,8 @@
         <button class="mapctl__b" data-z="0" aria-label="Recentrer"><svg class="ic"><use href="#i-target"/></svg></button>
         <button class="mapctl__b" id="mapFull" aria-label="Plein écran"><svg class="ic"><use href="#i-full"/></svg></button>
       </div>
-      <div class="mapcard" id="mapCard" hidden></div>
+      <div class="mappop" id="mapPop" hidden role="dialog" aria-label="Détails du lieu"></div>
+      <div class="toasts" id="toasts" aria-live="polite"></div>
       <p class="maphint">Glissez pour vous déplacer · molette ou pincement pour zoomer</p>
     </div>
   </section>

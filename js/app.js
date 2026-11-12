@@ -47,7 +47,7 @@ function attractionCard(a) {
   const u = uni(a.universe);
   return `<article class="acard"><div class="acard__img">${pic(a.img, `${a.name} – ${a.sub}`)}<span class="acard__type">${a.type}</span><span class="acard__rank top10">TOP<b>${a.rank}</b></span></div>
   <div class="acard__body"><h3>${a.name}</h3><p class="acard__sub">${a.sub}</p><p>${a.desc}</p>
-  <div class="meta"><span class="${a.height >= 120 ? 'warn' : ''}">${icon('ruler', 'ic--sm')} ${a.age}</span><span>${icon('clock', 'ic--sm')} ${a.duration}</span><span>${thrill(a.thrill)}</span></div>
+  <div class="meta"><span class="wchip" data-wait="${a.slug}"></span><span class="${a.height >= 120 ? 'warn' : ''}">${icon('ruler', 'ic--sm')} ${a.age}</span><span>${icon('clock', 'ic--sm')} ${a.duration}</span><span>${thrill(a.thrill)}</span></div>
   <div class="btns"><button class="btn btn--white btn--sm" data-attraction="${a.slug}">${icon('info')} Détails</button><button class="btn btn--gray btn--sm" data-onmap="${a.slug}">${icon('map')} Sur le plan</button></div></div></article>`;
 }
 function offerCard(o, i) {
@@ -194,20 +194,116 @@ const LABELS = [
   [1524, 578, 1668, 622, 'Hôtel Netflix', 'Hôtel'], [1316, 724, 1505, 880, '4 étages thématiques', 'Hôtel Netflix']
 ];
 const ENTRY = { x: 850, y: 760 }, M_PER_PX = .65, WALK = 75; // m/min
-const MAP = { z: 1, x: 0, y: 0, min: .3, max: 4, ready: false, sel: null, cats: new Set(Object.keys(CATS)), h: 999, route: store.get('nwRoute', []).filter(id => POIS.some(p => p.id === id)) };
+const MAP = { z: 1, x: 0, y: 0, min: .3, max: 4, ready: false, sel: null, sort: 'zone', showWait: true, cats: new Set(Object.keys(CATS)), h: 999, route: store.get('nwRoute', []).filter(id => POIS.some(p => p.id === id)) };
 const W = 1699, H = 926;
+
+/* ---------------------------------------------- Temps d'attente (simulation) */
+// Profil de fréquentation de chaque attraction : attente de pointe (min) et file virtuelle disponible.
+const WAIT = {
+  'stranger-things': { peak: 55, vq: true }, 'the-witcher': { peak: 65, vq: true }, 'one-piece': { peak: 60, vq: true },
+  'bridgerton': { peak: 50, vq: true }, 'squid-game-pont': { peak: 40, vq: true }, 'outer-banks': { peak: 35, vq: true },
+  'lupin': { peak: 30, vq: false }, 'squid-game-soleil': { peak: 20, vq: false }, 'labyrinthe': { peak: 0, vq: false }
+};
+const hashN = s => { let h = 2166136261; for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); } return (h >>> 0) / 4294967295; };
+function openRange(d = TODAY) {
+  const s = dayStatus(d), n = (s.hours.match(/\d+/g) || []).map(Number);
+  return s.open && n.length >= 2 ? [n[0] * 60, n[1] * 60] : [600, 1140];
+}
+/* Horloge de simulation : l'heure réelle pendant les horaires d'ouverture ;
+   sinon une « journée type » qui défile, pour que la démo reste vivante. */
+function simNow(now = new Date()) {
+  const [o, c] = openRange(), m = now.getHours() * 60 + now.getMinutes() + now.getSeconds() / 60;
+  const live = dayStatus(TODAY).open && m >= o && m < c;
+  return { m: live ? m : o + (m % (c - o)), live, o, c };
+}
+const DAYKEY = iso(TODAY);
+function waitAt(slug, m, noise = true) {
+  const w = WAIT[slug]; if (!w || !w.peak) return 0;
+  const t = m / 60, curve = .28 + .72 * Math.exp(-Math.pow((t - 14.5) / 2.7, 2));
+  const we = [0, 6].includes(TODAY.getDay()) ? 1.2 : 1;
+  const n = noise ? hashN(slug + DAYKEY + Math.floor(m / 5)) - .5 : 0;
+  return Math.max(5, Math.round(w.peak * curve * we * (1 + n * .4) / 5) * 5);
+}
+function liveWait(slug) {
+  const { m, live } = simNow(), w = WAIT[slug];
+  if (!w) return null;
+  if (!w.peak) return { free: true, live };
+  const down = hashN('panne' + slug + DAYKEY + Math.floor(m / 30)) < .035;
+  const now = waitAt(slug, m), before = waitAt(slug, m - 15);
+  return { min: now, down, live, trend: now > before ? 'up' : now < before ? 'down' : 'flat', level: now < 20 ? 'low' : now < 40 ? 'mid' : 'high' };
+}
+const waitTxt = w => !w ? '' : w.free ? 'Accès libre' : w.down ? 'Interrompue' : `${w.min} min`;
+const waitCls = w => !w ? '' : w.free ? 'free' : w.down ? 'down' : w.level;
+
+/* ------------------------------------------------------------ Files virtuelles */
+let VQ = store.get('nwVQ', []).filter(v => attr(v.slug) && Date.now() - v.end < 3 * 3600e3);
+const VQ_MAX = 2, VQ_SLOT = 30;
+const vqState = v => { const t = Date.now(); return t < v.start ? 'wait' : t < v.end ? 'ready' : 'expired'; };
+const vqActive = () => VQ.filter(v => vqState(v) !== 'expired');
+const fmtH = ms => new Date(ms).toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' }).replace(':', 'h');
+function fmtLeft(ms) { const s = Math.max(0, Math.round(ms / 1000)), h = Math.floor(s / 3600), m = Math.floor(s % 3600 / 60), ss = s % 60; return h ? `${h} h ${String(m).padStart(2, '0')}` : `${m}:${String(ss).padStart(2, '0')}`; }
+function vqNextSlot(slug) {
+  const w = liveWait(slug), delay = Math.max(15, Math.ceil(((w && w.min) || 15) / 5) * 5);
+  const start = Math.ceil((Date.now() + delay * 60e3) / 300e3) * 300e3;
+  return { start, end: start + VQ_SLOT * 60e3 };
+}
+function vqJoin(slug, ppl) {
+  if (VQ.some(v => v.slug === slug && vqState(v) !== 'expired')) return toast('Vous êtes déjà inscrit dans cette file virtuelle.');
+  if (vqActive().length >= VQ_MAX) return toast(`Maximum ${VQ_MAX} files virtuelles en même temps.`, 'warn');
+  const s = vqNextSlot(slug), code = 'VL-' + Math.random().toString(36).slice(2, 6).toUpperCase();
+  VQ.push({ slug, ppl, code, start: s.start, end: s.end, notified: false });
+  store.set('nwVQ', VQ); renderVQ();
+  toast(`Inscrit ! Présentez-vous à ${attr(slug).name} entre ${fmtH(s.start)} et ${fmtH(s.end)}.`, 'ok');
+}
+function vqCancel(code) { VQ = VQ.filter(v => v.code !== code); store.set('nwVQ', VQ); renderVQ(); toast('Inscription annulée.'); }
+function qrSVG(code) {
+  const N = 21, cell = (x, y) => hashN(code + x + '-' + y) > .5;
+  const finder = (x, y) => [[0, 0], [N - 7, 0], [0, N - 7]].some(([fx, fy]) => { const dx = x - fx, dy = y - fy; if (dx < 0 || dy < 0 || dx > 6 || dy > 6) return false; return dx === 0 || dy === 0 || dx === 6 || dy === 6 || (dx > 1 && dx < 5 && dy > 1 && dy < 5); });
+  const inF = (x, y) => [[0, 0], [N - 7, 0], [0, N - 7]].some(([fx, fy]) => x >= fx - 1 && x <= fx + 7 && y >= fy - 1 && y <= fy + 7);
+  let r = ''; for (let y = 0; y < N; y++) for (let x = 0; x < N; x++) if (inF(x, y) ? finder(x, y) : cell(x, y)) r += `<rect x="${x}" y="${y}" width="1" height="1"/>`;
+  return `<svg viewBox="-1 -1 ${N + 2} ${N + 2}" class="qr" aria-label="Code ${code}"><rect x="-1" y="-1" width="${N + 2}" height="${N + 2}" fill="#fff"/><g fill="#000">${r}</g></svg>`;
+}
+function vqTicket(v) {
+  const a = attr(v.slug), st = vqState(v), t = Date.now();
+  const head = st === 'wait' ? `<span class="vq__st vq__st--wait">Créneau dans <b data-cd="${v.start}">${fmtLeft(v.start - t)}</b></span>`
+    : st === 'ready' ? `<span class="vq__st vq__st--ready">C'est votre tour ! encore <b data-cd="${v.end}">${fmtLeft(v.end - t)}</b></span>`
+    : '<span class="vq__st vq__st--exp">Créneau expiré</span>';
+  return `<div class="vq vq--${st}"><div class="vq__top">${pic(a.img, '')}<div><strong>${a.name}</strong><small>${a.sub}</small></div></div>
+    ${head}<div class="vq__mid">${qrSVG(v.code)}<div><span class="vq__k">Créneau de retour</span><span class="vq__h">${fmtH(v.start)} – ${fmtH(v.end)}</span><span class="vq__k">${v.ppl} personne${v.ppl > 1 ? 's' : ''} · ${v.code}</span></div></div>
+    <div class="btns"><button class="btn btn--gray btn--sm" data-onmapvq="${a.slug}">${icon('map')} Y aller</button><button class="btn btn--gray btn--sm" data-vqcancel="${v.code}">${st === 'expired' ? 'Retirer' : 'Annuler'}</button></div></div>`;
+}
+function renderVQ() {
+  $('#vqCount').textContent = vqActive().length;
+  $('#vqList').innerHTML = VQ.length ? VQ.map(vqTicket).join('') + '<p class="muted small">Démonstration : les créneaux sont enregistrés dans ce navigateur uniquement.</p>'
+    : `<div class="route-empty">Aucune file virtuelle.<br>Cliquez sur une grande attraction du plan puis sur « Rejoindre la file virtuelle ».</div>`;
+  if (MAP.sel && attr(MAP.sel)) renderPopVQ();
+}
+function toast(msg, kind = '') {
+  const el = document.createElement('div'); el.className = 'toast ' + kind; el.innerHTML = msg;
+  ($('#toasts') || document.body).appendChild(el); setTimeout(() => el.classList.add('out'), 4200); setTimeout(() => el.remove(), 4700);
+}
+function liveTick() {
+  const { m, live } = simNow();
+  const hh = `${String(Math.floor(m / 60)).padStart(2, '0')}h${String(Math.floor(m % 60)).padStart(2, '0')}`;
+  const lt = $('#liveText'); if (lt) lt.textContent = live ? `En direct · mis à jour à ${hh}` : `Parc fermé : journée type simulée (${hh})`;
+  $('#liveBar')?.classList.toggle('sim', !live);
+  VQ.forEach(v => { if (vqState(v) === 'ready' && !v.notified) { v.notified = true; store.set('nwVQ', VQ); toast(`<b>C'est votre tour !</b> Présentez-vous à ${attr(v.slug).name} avant ${fmtH(v.end)}.`, 'ok'); renderVQ(); } });
+  if (MAP.ready) { updateWaitChips(); if (MAP.sel && attr(MAP.sel)) renderPopLive(); }
+  $$('[data-cd]').forEach(el => { const left = +el.dataset.cd - Date.now(); if (left <= 0) renderVQ(); else el.textContent = fmtLeft(left); });
+  $$('[data-wait]').forEach(el => { const w = liveWait(el.dataset.wait); el.className = 'wchip ' + waitCls(w); el.textContent = waitTxt(w); });
+}
 
 function mapInit() {
   if (MAP.ready) { mapFit(false); return; }
   MAP.ready = true;
   $('#mapLabels').innerHTML = LABELS.map(([x1, y1, x2, y2, t, s, soon]) => `<div class="mlabel${soon ? ' mlabel--soon' : ''}" style="left:${x1}px;top:${y1}px;width:${x2 - x1}px;height:${y2 - y1}px"><span><small>${s}</small>${t}</span></div>`).join('');
   $('#mCats').innerHTML = Object.entries(CATS).map(([k, c]) => `<button class="mcat on" data-cat="${k}" style="--c:${c.c}" aria-pressed="true"><i></i>${c.label} <b>${POIS.filter(p => p.cat === k).length}</b></button>`).join('');
-  renderPins(); renderMapList(); renderRoute();
+  renderPins(); renderMapList(); renderRoute(); renderVQ();
   const st = $('#mapstage');
   // Glisser / pincer
   const pts = new Map(); let start = null, moved = 0;
   st.addEventListener('pointerdown', e => {
-    if (e.target.closest('.mapctl,.mapcard')) return;
+    if (e.target.closest('.mapctl,.mappop,.toasts')) return;
     st.setPointerCapture(e.pointerId); pts.set(e.pointerId, { x: e.clientX, y: e.clientY });
     moved = 0; start = { x: MAP.x, y: MAP.y, z: MAP.z, pts: new Map(pts) }; st.classList.add('drag');
   });
@@ -258,6 +354,7 @@ function applyMap(anim) {
   wd.style.transform = `translate(${MAP.x}px,${MAP.y}px) scale(${MAP.z})`;
   wd.style.setProperty('--ps', (1 / MAP.z * Math.min(1.15, Math.max(.75, MAP.z))).toFixed(3));
   st.classList.toggle('zoomed', MAP.z > 1.6);
+  positionPop(); if (anim) setTimeout(positionPop, 620);
 }
 function zoomAt(z, cx, cy, anim) { z = clampZ(z); const wx = (cx - MAP.x) / MAP.z, wy = (cy - MAP.y) / MAP.z; MAP.z = z; MAP.x = cx - wx * z; MAP.y = cy - wy * z; applyMap(anim); }
 function zoomCenter(f) { const r = $('#mapstage').getBoundingClientRect(); zoomAt(MAP.z * f, r.width / 2, r.height / 2, true); }
@@ -271,8 +368,8 @@ function pinIcon(p) {
 function renderPins() {
   const soonZones = POIS.filter(p => p.cat === 'soon').map(p => `<button class="zone-soon" data-poi="${p.id}" style="left:${p.x}px;top:${p.y}px;width:${p.r * 2}px;height:${p.r * 2}px" aria-label="${p.name}, ${p.sub}"><span>Bientôt</span></button>`).join('');
   $('#mapLayer').innerHTML = soonZones + `<span class="youarehere" style="left:${ENTRY.x}px;top:${ENTRY.y + 40}px" title="Vous êtes ici"></span>` +
-    POIS.filter(p => p.cat !== 'soon').map(p => `<button class="pin" data-poi="${p.id}" data-cat="${p.cat}" style="left:${p.x}px;top:${p.y}px;--c:${CATS[p.cat].c}" aria-label="${p.name}${p.sub ? ', ' + p.sub : ''}"><span class="pin__b">${pinIcon(p)}</span><span class="pin__l">${p.name}</span></button>`).join('');
-  updatePins();
+    POIS.filter(p => p.cat !== 'soon').map(p => `<button class="pin" data-poi="${p.id}" data-cat="${p.cat}" style="left:${p.x}px;top:${p.y}px;--c:${CATS[p.cat].c}" aria-label="${p.name}${p.sub ? ', ' + p.sub : ''}">${p.cat === 'attr' ? '<span class="pin__w"></span>' : ''}<span class="pin__b">${pinIcon(p)}</span><span class="pin__l">${p.name}</span></button>`).join('');
+  updatePins(); updateWaitChips();
 }
 function poiVisible(p) {
   const q = ($('#mSearch')?.value || '').trim().toLowerCase();
@@ -288,26 +385,85 @@ function updatePins() {
   });
 }
 function renderMapList() {
-  const order = Object.keys(CATS);
-  const list = POIS.filter(poiVisible).sort((a, b) => order.indexOf(a.cat) - order.indexOf(b.cat) || (a.a?.rank || 0) - (b.a?.rank || 0));
-  $('#mList').innerHTML = list.length ? list.map(p => `<li><button data-poi="${p.id}" class="${MAP.sel === p.id ? 'on' : ''}" style="--c:${CATS[p.cat].c}">${p.img ? pic(p.img, '') : `<span class="mi">${icon(SV_ICON[p.id] || 'info')}</span>`}
-    <span class="${tooTall(p) ? 'off' : ''}"><strong>${p.name}${p.cat === 'soon' ? '<span class="soon">BIENTÔT</span>' : ''}</strong><small>${p.cat === 'attr' ? p.sub + ' · ' + p.a.age : p.sub}</small></span></button></li>`).join('')
+  const order = Object.keys(CATS), wv = p => { const w = p.cat === 'attr' && liveWait(p.id); return !w ? 999 : w.free ? 0 : w.down ? 998 : w.min; };
+  let list = POIS.filter(poiVisible);
+  if (MAP.sort === 'zone') list.sort((a, b) => order.indexOf(a.cat) - order.indexOf(b.cat) || (a.a?.rank || 0) - (b.a?.rank || 0));
+  else list.sort((a, b) => (a.cat === 'attr' ? 0 : 1) - (b.cat === 'attr' ? 0 : 1) || (MAP.sort === 'wait' ? wv(a) - wv(b) : wv(b) - wv(a)) || order.indexOf(a.cat) - order.indexOf(b.cat));
+  $('#mList').innerHTML = list.length ? list.map(p => { const w = p.cat === 'attr' ? liveWait(p.id) : null; return `<li><button data-poi="${p.id}" class="${MAP.sel === p.id ? 'on' : ''}" style="--c:${CATS[p.cat].c}">${p.img ? pic(p.img, '') : `<span class="mi">${icon(SV_ICON[p.id] || 'info')}</span>`}
+    <span class="${tooTall(p) ? 'off' : ''}"><strong>${p.name}${p.cat === 'soon' ? '<span class="soon">BIENTÔT</span>' : ''}</strong><small>${p.cat === 'attr' ? p.sub + ' · ' + p.a.age : p.sub}</small></span>
+    ${w ? `<span class="wchip ${waitCls(w)}">${waitTxt(w)}</span>` : ''}${VQ.some(v => v.slug === p.id && vqState(v) !== 'expired') ? `<span class="vqmini" title="Inscrit en file virtuelle">${icon('ticket', 'ic--sm')}</span>` : ''}</button></li>`; }).join('')
     : '<li class="route-empty">Aucun lieu ne correspond.</li>';
+}
+function updateWaitChips() {
+  $$('#mapLayer .pin[data-cat="attr"]').forEach(el => { const w = liveWait(el.dataset.poi), c = el.querySelector('.pin__w'); if (c) { c.className = 'pin__w ' + waitCls(w); c.textContent = w.free ? 'Libre' : w.down ? '!' : w.min + "'"; } });
+  if (MAP.sort !== 'zone' && document.activeElement?.closest('#mList') == null) renderMapList();
+}
+function forecastBars(slug) {
+  const { m, o, c } = simNow(); let bars = '';
+  for (let h = o; h < c; h += 60) {
+    const w = waitAt(slug, h + 30, false), on = m >= h && m < h + 60;
+    bars += `<span class="fc__b${on ? ' on' : ''}" style="--h:${Math.max(6, w / 80 * 100)}%" title="${h / 60} h : ~${w} min"><i></i><em>${h / 60}</em></span>`;
+  }
+  return `<div class="fc"><span class="fc__t">Affluence prévue aujourd'hui</span><div class="fc__g">${bars}</div></div>`;
+}
+function renderPopLive() {
+  const el = $('#popLive'); if (!el) return; const w = liveWait(MAP.sel);
+  const tr = w.trend === 'up' ? '↗ en hausse' : w.trend === 'down' ? '↘ en baisse' : '→ stable';
+  el.innerHTML = w.free ? `<div class="wbig free"><strong>Accès libre</strong><span>Pas de file d'attente</span></div>`
+    : w.down ? `<div class="wbig down"><strong>Interrompue</strong><span>Réouverture prévue sous peu</span></div>`
+    : `<div class="wbig ${w.level}"><strong>${w.min}<small> min</small></strong><span>${tr}</span></div>`;
+  el.insertAdjacentHTML('beforeend', `<span class="wbig__tag"><span class="livedot"></span>${w.live ? 'En direct' : 'Journée type'} · simulation</span>`);
+}
+function renderPopVQ() {
+  const el = $('#popVQ'); if (!el || el.contains(document.activeElement) && document.activeElement.tagName === 'SELECT') return;
+  const slug = MAP.sel, cfg = WAIT[slug], mine = VQ.find(v => v.slug === slug && vqState(v) !== 'expired');
+  if (!cfg) { el.innerHTML = ''; return; }
+  if (mine) { el.innerHTML = `<div class="pvq pvq--in"><span class="pvq__t">${icon('check')} Inscrit en file virtuelle</span><span>Créneau <b>${fmtH(mine.start)} – ${fmtH(mine.end)}</b> · ${mine.ppl} pers.</span><button class="btn btn--gray btn--sm" data-tab-go="vq">Voir mon billet</button></div>`; return; }
+  if (!cfg.vq) { el.innerHTML = `<div class="pvq pvq--no">${icon('info', 'ic--sm')} Pas de file virtuelle : l'attente reste courte sur cette attraction.</div>`; return; }
+  const w = liveWait(slug);
+  if (w.down) { el.innerHTML = `<div class="pvq pvq--no">${icon('info', 'ic--sm')} File virtuelle suspendue pendant l'interruption.</div>`; return; }
+  const s = vqNextSlot(slug), full = vqActive().length >= VQ_MAX;
+  el.innerHTML = `<div class="pvq"><span class="pvq__t">${icon('ticket')} File virtuelle disponible</span>
+    <span>Évitez la queue : prochain créneau <b>${fmtH(s.start)} – ${fmtH(s.end)}</b></span>
+    <div class="pvq__f"><label><span class="sr">Nombre de personnes</span><select id="vqPpl">${[1, 2, 3, 4, 5, 6].map(n => `<option ${n === 4 ? 'selected' : ''}>${n}</option>`).join('')}</select></label>
+    <button class="btn btn--red btn--sm" data-vqjoin="${slug}" ${full ? 'disabled' : ''}>Rejoindre la file virtuelle</button></div>
+    ${full ? `<small class="pvq__warn">Vous avez déjà ${VQ_MAX} files virtuelles actives.</small>` : ''}</div>`;
+}
+function positionPop() {
+  const pop = $('#mapPop'); if (!pop || pop.hidden || !MAP.sel) return;
+  const p = poi(MAP.sel), st = $('#mapstage').getBoundingClientRect();
+  pop.classList.remove('sheet');
+  if (st.width < 700 || pop.offsetHeight > st.height - 40) { pop.classList.add('sheet'); pop.style.left = pop.style.top = ''; pop.classList.remove('offscreen'); return; }
+  const sx = MAP.x + p.x * MAP.z, sy = MAP.y + p.y * MAP.z, pw = pop.offsetWidth, ph = pop.offsetHeight, pinH = 52;
+  let left = Math.min(st.width - pw - 12, Math.max(12, sx - pw / 2)), top = sy - pinH - ph - 14, below = false;
+  if (top < 10) { top = sy + 14; below = true; }
+  top = Math.min(top, st.height - ph - 10);
+  pop.style.left = left + 'px'; pop.style.top = top + 'px';
+  pop.style.setProperty('--ax', Math.min(pw - 24, Math.max(24, sx - left)) + 'px');
+  pop.classList.toggle('below', below);
+  pop.classList.toggle('offscreen', sx < 0 || sx > st.width || sy < 0 || sy > st.height);
 }
 function selectPoi(id, fly = true) {
   const p = poi(id); if (!p) return;
   MAP.sel = id; updatePins(); renderMapList();
-  if (fly) flyTo(p.x, p.y, Math.max(MAP.z, 1.5));
-  const inRoute = MAP.route.includes(id), canRoute = p.cat !== 'soon' && p.cat !== 'service';
-  const card = $('#mapCard'); card.hidden = false; card.style.setProperty('--c', CATS[p.cat].c === '#ffffff' ? '#e50914' : CATS[p.cat].c);
-  card.innerHTML = `${p.img ? `<div class="mapcard__img">${pic(p.img, p.name)}<button class="mapcard__x" data-mapclose aria-label="Fermer">${icon('close')}</button></div>` : `<button class="mapcard__x" data-mapclose aria-label="Fermer" style="position:absolute">${icon('close')}</button>`}
-    <div class="mapcard__b"><span class="mapcard__k">${p.kicker}</span><h3>${p.name}${p.cat === 'attr' ? `<br><span style="font-size:.6em;color:#bbb">${p.sub}</span>` : ''}</h3><p>${p.desc}</p>
-    ${p.cat === 'attr' ? `<div class="meta"><span class="${tooTall(p) ? 'warn' : ''}">${icon('ruler', 'ic--sm')} ${p.a.age}</span><span>${icon('clock', 'ic--sm')} ${p.a.duration}</span><span>${thrill(p.a.thrill)}</span></div>` : ''}
-    ${tooTall(p) ? '<p style="color:#ff7b82;font-weight:600;font-size:13.5px">Taille minimale non atteinte pour votre enfant.</p>' : ''}
-    <div class="btns">${canRoute ? `<button class="btn ${inRoute ? 'btn--gray' : 'btn--red'} btn--sm" data-route="${id}">${inRoute ? icon('check') + ' Dans le parcours' : icon('plus') + ' Parcours'}</button>` : ''}
-    ${p.cat === 'attr' ? `<button class="btn btn--white btn--sm" data-attraction="${p.a.slug}">Fiche</button>` : ''}${p.cat === 'hotel' ? '<a class="btn btn--white btn--sm" href="#hotel" data-link>Voir l’hôtel</a>' : ''}</div></div>`;
+  const inRoute = MAP.route.includes(id), canRoute = p.cat !== 'soon' && p.cat !== 'service', isA = p.cat === 'attr';
+  const pop = $('#mapPop'); pop.hidden = false; pop.style.setProperty('--c', CATS[p.cat].c === '#ffffff' ? '#e50914' : CATS[p.cat].c);
+  pop.innerHTML = `<button class="pop__x" data-mapclose aria-label="Fermer">${icon('close')}</button>
+    ${p.img ? `<div class="pop__img">${pic(p.img, p.name)}${isA ? '<div class="pop__live" id="popLive"></div>' : ''}</div>` : ''}
+    <div class="pop__b"><span class="pop__k">${p.kicker}</span><h3>${p.name}</h3>${isA ? `<p class="pop__sub">${p.sub}</p>` : ''}
+    ${isA ? `<div class="meta"><span class="${tooTall(p) ? 'warn' : ''}">${icon('ruler', 'ic--sm')} ${p.a.age}</span><span>${icon('clock', 'ic--sm')} ${p.a.duration}</span><span>${thrill(p.a.thrill)}</span></div>` : ''}
+    <p class="pop__d">${isA ? p.a.desc : p.desc}</p>
+    ${tooTall(p) ? '<p class="pop__warn">Taille minimale non atteinte pour votre enfant.</p>' : ''}
+    ${isA && WAIT[id].peak ? forecastBars(id) : ''}
+    ${isA ? '<div id="popVQ"></div>' : ''}
+    <div class="btns pop__btns">${canRoute ? `<button class="btn ${inRoute ? 'btn--gray' : 'btn--white'} btn--sm" data-route="${id}">${inRoute ? icon('check') + ' Dans le parcours' : icon('plus') + ' Parcours'}</button>` : ''}
+    ${isA ? `<button class="btn btn--gray btn--sm" data-attraction="${p.a.slug}">Fiche complète</button>` : ''}${p.cat === 'hotel' ? '<a class="btn btn--gray btn--sm" href="#hotel" data-link>Voir l’hôtel</a>' : ''}</div></div>`;
+  if (isA) { renderPopLive(); renderPopVQ(); }
+  if (fly) { const r = $('#mapstage').getBoundingClientRect(), z = Math.max(MAP.z, r.width < 700 ? 1.3 : 1.4); flyTo(p.x, p.y + (r.width < 700 ? 120 : -(pop.offsetHeight / 2) / z), z); }
+  requestAnimationFrame(positionPop); setTimeout(positionPop, 650);
+  if (innerWidth < 980) { const r = $('#mapstage').getBoundingClientRect(); if (r.top < 0 || r.top > innerHeight * .3) scrollToEl($('#mapstage')); }
 }
-function closeCard() { $('#mapCard').hidden = true; MAP.sel = null; updatePins(); renderMapList(); }
+function closeCard() { $('#mapPop').hidden = true; MAP.sel = null; updatePins(); renderMapList(); }
 function toggleRoute(id) {
   const i = MAP.route.indexOf(id); i > -1 ? MAP.route.splice(i, 1) : MAP.route.push(id);
   store.set('nwRoute', MAP.route); renderRoute(); if (MAP.sel === id) selectPoi(id, false);
@@ -389,7 +545,7 @@ function attractionModal(slug) {
   const a = attr(slug); if (!a) return; const u = uni(a.universe);
   openModal(`<div class="md__hero">${pic(a.img, a.name)}<div class="md__ht"><h2 id="modalTitle">${a.name}</h2><p>${a.sub}</p>
     <div class="btns"><button class="btn btn--white" data-book="1jour">${icon('ticket')} Réserver</button><button class="btn btn--gray" data-onmap="${a.slug}">${icon('map')} Voir sur le plan</button></div></div></div>
-    <div class="md__body"><div><div class="meta"><span class="${a.height >= 120 ? 'warn' : ''}">${a.age}</span><span>${a.duration}</span><span>${thrill(a.thrill)}</span></div><p>${a.long}</p></div>
+    <div class="md__body"><div><div class="meta"><span class="wchip" data-wait="${a.slug}"></span><span class="${a.height >= 120 ? 'warn' : ''}">${a.age}</span><span>${a.duration}</span><span>${thrill(a.thrill)}</span></div><p>${a.long}</p></div>
     <div class="md__side"><span>Univers : <b>${u.name}</b></span><span>Type : <b>${a.type}</b></span><span>Taille : <b>${hLabel(a.height)}</b></span><span>À vivre : <b>${a.features.join(', ')}</b></span></div></div>`);
 }
 
@@ -474,7 +630,7 @@ $$('.has-mega').forEach(m => {
 $('#burger').addEventListener('click', () => { const mm = $('#mobileMenu'); mm.classList.add('open'); mm.setAttribute('aria-hidden', 'false'); $('#burger').setAttribute('aria-expanded', 'true'); document.body.style.overflow = 'hidden'; $$('.mmenu__nav a').forEach((a, i) => a.style.transitionDelay = (.05 + i * .035) + 's'); setTimeout(() => $('#mclose').focus(), 50); });
 $('#mclose').addEventListener('click', closeMenus);
 $('#buddyBtn').addEventListener('click', e => { e.stopPropagation(); const p = $('#buddyPanel'); p.hidden = !p.hidden; $('#buddyBtn').setAttribute('aria-expanded', !p.hidden); });
-document.addEventListener('keydown', e => { if (e.key === 'Escape') { if (!$('#modal').hidden) closeModal(); else if (current === 'plan' && !$('#mapCard').hidden) closeCard(); else closeMenus(); } });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') { if (!$('#modal').hidden) closeModal(); else if (current === 'plan' && !$('#mapPop').hidden) closeCard(); else closeMenus(); } });
 
 /* -------------------------------------------------------------- Clics */
 document.addEventListener('click', e => {
@@ -506,9 +662,16 @@ document.addEventListener('click', e => {
   if ((el = t.closest('.tab'))) { $$('.tab').forEach(b => { b.classList.toggle('is-on', b === el); b.setAttribute('aria-selected', b === el); }); $$('[data-pane]').forEach(p => p.hidden = p.dataset.pane !== el.dataset.tab); return; }
   if (t.id === 'routeOpt') return optimizeRoute();
   if (t.id === 'routeClear') { MAP.route = []; store.set('nwRoute', []); renderRoute(); if (MAP.sel) selectPoi(MAP.sel, false); return; }
-  if (t.closest('#mapstage') && !t.closest('.mapcard,.mapctl') && !$('#mapCard').hidden) closeCard();
+  if ((el = t.closest('[data-vqjoin]'))) return vqJoin(el.dataset.vqjoin, +($('#vqPpl')?.value || 2));
+  if ((el = t.closest('[data-vqcancel]'))) return vqCancel(el.dataset.vqcancel);
+  if ((el = t.closest('[data-onmapvq]'))) { $('.tab[data-tab=explore]').click(); return selectPoi(el.dataset.onmapvq); }
+  if ((el = t.closest('[data-tab-go]'))) { $(`.tab[data-tab=${el.dataset.tabGo}]`).click(); if (innerWidth < 980) scrollToEl($('.mapside')); return; }
+  if (t.closest('#mapstage') && !t.closest('.mappop,.mapctl,.toasts') && !$('#mapPop').hidden) closeCard();
 });
 $('#mSearch').addEventListener('input', () => { updatePins(); renderMapList(); });
+$('#mSort').addEventListener('change', e => { MAP.sort = e.target.value; renderMapList(); });
+$('#mShowWait').addEventListener('change', e => { MAP.showWait = e.target.checked; $('#mapstage').classList.toggle('nowait', !e.target.checked); });
+setInterval(liveTick, 1000);
 $('#mHeight').addEventListener('change', e => { MAP.h = +e.target.value; updatePins(); renderMapList(); if (MAP.sel) selectPoi(MAP.sel, false); });
 $('#mapLayer').addEventListener('keydown', e => { const p = e.target.closest('[data-poi]'); if (p && e.key === 'Enter') selectPoi(p.dataset.poi); });
 
